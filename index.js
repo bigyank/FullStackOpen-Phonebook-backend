@@ -118,5 +118,5 @@ app.post("/api/persons", (req, res) => {
   res.status(201).json(req.body);
 });
 
-const PORT = 8080;
-app.listen(PORT, () => console.log("server running"));
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`server running at ${PORT}`));
