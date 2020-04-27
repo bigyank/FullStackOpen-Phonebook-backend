@@ -2,8 +2,10 @@ const express = require("express");
 const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.static("build"));
 morgan.token("req", (req, res) => {
@@ -89,6 +91,7 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
+  const delPerson = persons.filter((person) => person.id === id);
   persons = persons.filter((person) => person.id !== id);
   res.status(204).end();
 });
@@ -114,9 +117,11 @@ app.post("/api/persons", (req, res) => {
   const id = persons.length
     ? Math.max(...persons.map((person) => person.id))
     : 0;
-  persons = [...persons, { id: id + 1, ...req.body }];
-  res.status(201).json(req.body);
+
+  const newPerson = { id: id + 1, ...req.body };
+  persons = [...persons, newPerson];
+  res.status(201).json(newPerson);
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`server running at ${PORT}`));
