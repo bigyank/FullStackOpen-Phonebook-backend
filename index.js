@@ -5,7 +5,7 @@ const path = require("path");
 
 const app = express();
 app.use(express.json());
-
+app.use(express.static("build"));
 morgan.token("req", (req, res) => {
   return JSON.stringify(req.body, null, 2);
 });
