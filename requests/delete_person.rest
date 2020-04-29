@@ -1,0 +1,1 @@
+DELETE {{url}}/api/persons/5ea963446209be07ac2c90a3 HTTP/1.1

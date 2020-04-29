@@ -40,25 +40,28 @@ app.get("/api/persons", async (req, res) => {
   }
 });
 
-app.get("/api/persons/:id", async (req, res) => {
+app.get("/api/persons/:id", async (req, res, next) => {
   const id = req.params.id;
   try {
     const person = await Person.findById(id);
     if (!person) {
-      res.status(404).send({ error: "Unable to find" });
+      return res.status(404).send({ error: "Unable to find" });
     }
     res.status(200).send(person);
   } catch (e) {
     console.log(e);
-    res.status(500).end();
+    next(e);
   }
 });
 
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const delPerson = persons.filter((person) => person.id === id);
-  persons = persons.filter((person) => person.id !== id);
-  res.status(204).end();
+app.delete("/api/persons/:id", async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const result = await Person.findByIdAndDelete(id);
+    res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
 });
 
 app.get("/info", (req, res) => {
@@ -69,7 +72,7 @@ app.get("/info", (req, res) => {
   );
 });
 
-app.post("/api/persons", async (req, res) => {
+app.post("/api/persons", async (req, res, next) => {
   if (!req.body.name || !req.body.number) {
     return res.status(400).send({ error: "Missing fields" });
   }
@@ -83,10 +86,39 @@ app.post("/api/persons", async (req, res) => {
     const savedPerson = await person.save();
     res.status(201).send(savedPerson);
   } catch (e) {
-    console.log(e);
-    res.status(500).send({ error: "Unable to save data" });
+    res.status(400).send({ error: "Invalid field" });
   }
 });
+
+app.put("/api/persons/:id", async (req, res, next) => {
+  const id = req.params.id;
+  const update = req.body;
+  try {
+    const updatedPerson = await Person.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+    res.status(200).send(updatedPerson);
+  } catch (e) {
+    next(e);
+  }
+});
+
+const handleInvalidUrl = (req, res) => {
+  res.status(404).send({ error: "Unknown endpoint" });
+};
+
+app.use(handleInvalidUrl);
+
+const errorHandler = (err, req, res, next) => {
+  console.error(err.message);
+
+  if (err.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" });
+  }
+
+  next(err);
+};
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`server running at ${PORT}`));
