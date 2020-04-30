@@ -1,17 +1,17 @@
-const { Schema, model } = require("mongoose");
-var uniqueValidator = require("mongoose-unique-validator");
+const { Schema, model } = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const personSchema = new Schema({
   name: {
     type: String,
     required: true,
     unique: true,
-    minlength: [3, "name must be more than 3 characters"],
+    minlength: [3, 'name must be more than 3 characters'],
   },
   number: {
     type: String,
     required: true,
-    minlength: [8, "minimum number of digits is 8"],
+    minlength: [8, 'minimum number of digits is 8'],
   },
 });
 personSchema.plugin(uniqueValidator);
@@ -25,6 +25,6 @@ personSchema.methods.toJSON = function () {
   return userObject;
 };
 
-const Person = model("Person", personSchema);
+const Person = model('Person', personSchema);
 
 module.exports = Person;

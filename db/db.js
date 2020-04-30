@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI;
 
 mongoose
   .connect(url, {
@@ -10,5 +10,5 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then(() => console.log("connected to MONGODB"))
+  .then(() => console.log('connected to MONGODB'))
   .catch((e) => console.log(e));
