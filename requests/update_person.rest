@@ -3,5 +3,6 @@ PUT {{url}}/api/persons/5ea94a832eca712e989e37d0 HTTP/1.1
 content-type: {{contentType}}
 
 {
-    "number": "7878"
+    "name":"cyrus",
+    "number": "7878",
 }

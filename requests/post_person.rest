@@ -2,6 +2,6 @@ POST {{url}}/api/persons  HTTP/1.1
 content-type: {{contentType}}
 
 {
-    "name": "Caprina",
-    "number": "963"
+    "name": "wzkidisski",
+    "number": 123
 }

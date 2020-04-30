@@ -73,10 +73,6 @@ app.get("/info", (req, res) => {
 });
 
 app.post("/api/persons", async (req, res, next) => {
-  if (!req.body.name || !req.body.number) {
-    return res.status(400).send({ error: "Missing fields" });
-  }
-
   const person = new Person({
     name: req.body.name,
     number: req.body.number,
@@ -86,7 +82,7 @@ app.post("/api/persons", async (req, res, next) => {
     const savedPerson = await person.save();
     res.status(201).send(savedPerson);
   } catch (e) {
-    res.status(400).send({ error: "Invalid field" });
+    next(e);
   }
 });
 
@@ -110,12 +106,12 @@ const handleInvalidUrl = (req, res) => {
 app.use(handleInvalidUrl);
 
 const errorHandler = (err, req, res, next) => {
-  console.error(err.message);
-
   if (err.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
   }
-
+  if (err.name === "ValidationError") {
+    return res.status(400).json({ error: err.message });
+  }
   next(err);
 };
 app.use(errorHandler);

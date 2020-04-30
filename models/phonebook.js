@@ -1,15 +1,20 @@
 const { Schema, model } = require("mongoose");
+var uniqueValidator = require("mongoose-unique-validator");
 
 const personSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
+    minlength: [3, "name must be more than 3 characters"],
   },
   number: {
-    type: Number,
+    type: String,
     required: true,
+    minlength: [8, "minimum number of digits is 8"],
   },
 });
+personSchema.plugin(uniqueValidator);
 
 personSchema.methods.toJSON = function () {
   const user = this;
