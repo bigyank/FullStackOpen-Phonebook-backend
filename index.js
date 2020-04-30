@@ -44,7 +44,7 @@ app.get('/api/persons', async (req, res) => {
 });
 
 app.get('/api/persons/:id', async (req, res, next) => {
-  const { params: id } = req;
+  const { id } = req.params;
   try {
     const person = await Person.findById(id);
     if (!person) {
@@ -58,7 +58,7 @@ app.get('/api/persons/:id', async (req, res, next) => {
 });
 
 app.delete('/api/persons/:id', async (req, res, next) => {
-  const { params: id } = req;
+  const { id } = req.params;
   try {
     await Person.findByIdAndDelete(id);
     res.status(204).end();
@@ -91,7 +91,7 @@ app.post('/api/persons', async (req, res, next) => {
 });
 
 app.put('/api/persons/:id', async (req, res, next) => {
-  const { params: id } = req;
+  const { id } = req.params;
   const update = req.body;
   try {
     const updatedPerson = await Person.findByIdAndUpdate(id, update, {
